@@ -19,7 +19,7 @@ install_requires = extract_requirements('requirements.txt')
 
 setup(
     name='build_docker_env',
-    version='0.0.1-dev',
+    version='0.0.1',
     packages=find_packages(),
     url='',
     license='Proprietary',
