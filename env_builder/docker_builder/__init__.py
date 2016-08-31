@@ -28,12 +28,14 @@ def get_docker_client(docker_machine_config=DOCKER_MACHINE_JSON):
     return docker.Client(base_url='tcp://{}:2376'.format(config['Driver']['IPAddress'], ), tls=tls_config)
 
 
-def build_docker_image(client, tag=None):
+def build_docker_image(client, namespace=None, tag=None):
+    namespace = '' if namespace is None else '{}/'.format(namespace.rsplit('/'))
     if tag is None:
-        tag = 'biarrioptimisation/{}_env:latest'.format(split(get_curdir())[-1])
+        tag = '{}_env:latest'.format(split(get_curdir())[-1])
+    fulltag = '{}{}'.format(namespace, tag)
     for line in client.build(
             path=get_curdir(),
-            tag=tag,
+            tag=fulltag,
             rm=True,
             nocache=True,
             stream=True,
