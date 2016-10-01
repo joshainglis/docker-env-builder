@@ -63,20 +63,14 @@ def pull_in_ssh_dependencies(ssh_deps, ssh_reqs, base_reqs, pulled, working_dire
 
 def get_dependencies(requirements=None, working_dir=None, dependency_dir=None, ssh_reqs=None, base_reqs=None,
                      pulled=None):
-    if ssh_reqs is None:
-        ssh_reqs = set()
-    if base_reqs is None:
-        base_reqs = BasicRepoContainer()
-    if pulled is None:
-        pulled = set()
-    if working_dir is None:
-        working_dir = get_curdir()
-    if dependency_dir is None:
-        dependency_dir = make_dep_dir(working_dir)
-    if requirements is None:
-        requirements = abspath(join(working_dir, 'requirements.txt'))
+    ssh_reqs = set() if ssh_reqs is None else ssh_reqs
+    base_reqs = BasicRepoContainer() if base_reqs is None else base_reqs
+    pulled = set() if pulled is None else pulled
+    working_dir = get_curdir() if working_dir is None else working_dir
+    dependency_dir = make_dep_dir(working_dir) if dependency_dir is None else dependency_dir
+    requirements = abspath(join(working_dir, 'requirements.txt')) if requirements is None else requirements
     with open(requirements, 'r') as f:
         get_reqs(f, base_reqs, ssh_reqs)
     pull_in_ssh_dependencies(ssh_reqs, ssh_reqs, base_reqs, pulled, working_dir, dependency_dir)
-    with open('external_requirements.txt', 'w') as f:
+    with open(abspath(join(working_dir, 'external_requirements.txt')), 'w') as f:
         f.writelines(str(base_reqs))
